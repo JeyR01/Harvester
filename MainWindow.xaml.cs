@@ -190,7 +190,8 @@ namespace Harvester
                 var d when d.ContainsOwn("Speed") => "Speed",
                 var d when d.ContainsOwn("Non-Life") => "Non-Life",
                 var d when d.ContainsOwn("Non-Physical") => "Non-Physical",
-                var d when d.ContainsOwn("Non-Defence") => "Non-Physical",
+                var d when d.ContainsOwn("Non-Defence") => "Non-Defence",
+                var d when d.ContainsOwn("Non-Caster") => "Non-Caster",
                 var d when d.ContainsOwn("Critical") => "Critical",
                 var d when d.ContainsOwn("Influence") => "Influence",
                 _ => "unknown"
@@ -216,6 +217,7 @@ namespace Harvester
                 "Influence",
                 "Non-Physical",
                 "Non-Defence",
+                "Non-Caster",
                 "Non-Life"
             };
 
