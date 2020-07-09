@@ -167,6 +167,7 @@ namespace Harvester
             {
                 var d when d.ContainsOwn("Remove") => RemoveType(name),
                 var d when d.ContainsOwn("Augment") => AugmentType(name),
+                var d when d.ContainsOwn("Change") => ChangeType(name),
                 _ => "Special"
             };
         }
@@ -298,6 +299,13 @@ namespace Harvester
             }
 
             return "Remove " + CraftTypeBase(name);
+        }
+
+        private string ChangeType(string name)
+        {
+            
+            var ret = CraftTypeMixed(name);
+            return $"Change {ret.Item1} to {ret.Item2}";
         }
 
         private string AugmentType(string name)
@@ -501,7 +509,9 @@ namespace Harvester
         {
             var b = new StringBuilder();
 
-            var harvestbase = Harvests.Where(p => !p.Lock && p.Count != 0 && p.Type != "Special");
+            var harvestbase = Harvests.Where(p => !p.Lock && p.Count != 0 && p.Type != "Special" &&!p.Type.ContainsOwn("Change"));
+
+            var changebase = Harvests.Where(p => !p.Lock && p.Count != 0 && p.Type.ContainsOwn("Change"));
 
             var notmixed = harvestbase.Where(p => !p.Type.ContainsOwn("/"));
 
@@ -560,6 +570,16 @@ namespace Harvester
                 }
             }
 
+            if (changebase.Any())
+            {
+                b.Append("\r\n **Change mods**: \r ");
+
+                foreach (var item in changebase)
+                {
+                    b.Append($"-{item.Type} : **{item.Price}** \t {item.Count}x \r\n");
+                }
+            }
+
             if (Harvests.Any(p => p.Type.ContainsOwn("Special")))
             {
                 b.Append("\r\n **Special crafts**: \r ");
@@ -569,6 +589,8 @@ namespace Harvester
                     b.Append($"-{item.Name} : **{item.Price}** \t {item.Count}x \r\n");
                 }
             }
+
+            
 
             Clipboard.SetText(b.ToString());
         }
