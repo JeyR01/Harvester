@@ -209,35 +209,67 @@ namespace Harvester
             {
                 "Physical",
                 "Chaos",
-                "Non-Chaos",
                 "Attack",
                 "Lightning",
-                "Non-Lightning",
                 "Cold",
-                "Non-Cold",
                 "Defence",
                 "Life",
                 "Caster",
                 "Fire",
-                "Non-Fire",
                 "Speed",
                 "Critical",
-                "Influence",
+                "Influence"
+                
+            };
+            var nonlist = new List<string>
+            {
                 "Non-Physical",
                 "Non-Defence",
+                "Non-Lightning",
+                "Non-Chaos",
                 "Non-Caster",
+                "Non-Cold",
                 "Non-Attack",
+                "Non-Fire",
                 "Non-Life"
             };
 
             string[] init = new string[2];
-            int i = 0;
-            foreach (var item in list)
+            foreach (var item in nonlist)
             {
                 if (name.ContainsOwn(item))
                 {
-                    init[i] = item;
-                    i++;
+                    init[0] = item;
+                    break;
+                }
+            }
+
+            if(init[0] == null)
+            {
+                int i = 0;
+                foreach (var item in list)
+                {
+                    if (name.ContainsOwn(item))
+                    {
+                        init[i] = item;
+                        i++;
+                        if(i == 2)
+                        {
+                            break;
+                        }
+                    }
+                }
+            }
+            else
+            {
+                var subs = name.Substring(name.IndexOf(init[0],StringComparison.OrdinalIgnoreCase)).Substring(init[0].Length);
+                foreach (var item in list)
+                {
+                    if (subs.ContainsOwn(item))
+                    {
+                        init[1] = item;
+                        break;
+                    }
                 }
             }
 
@@ -247,7 +279,7 @@ namespace Harvester
             }
             else
             {
-                if (name.IndexOf(init[0]) < name.IndexOf(init[1]))
+                if (name.IndexOf(init[0],StringComparison.OrdinalIgnoreCase) < name.IndexOf(init[1],StringComparison.OrdinalIgnoreCase))
                 {
                     return (init[0], init[1]);
                 }
