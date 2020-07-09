@@ -332,7 +332,13 @@ namespace Harvester
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            Harvests.Clear();
+
+            var list = Harvests.Where(p => !p.Lock).ToList();
+            foreach (var item in list)
+            {
+                Harvests.Remove(item);
+            }
+            
         }
 
         private void Row_clicked(object sender, RoutedEventArgs e)
