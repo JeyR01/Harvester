@@ -191,6 +191,7 @@ namespace Harvester
                 var d when d.ContainsOwn("Non-Life") => "Non-Life",
                 var d when d.ContainsOwn("Non-Physical") => "Non-Physical",
                 var d when d.ContainsOwn("Non-Defence") => "Non-Defence",
+                var d when d.ContainsOwn("Non-Attack") => "Non-Attack",
                 var d when d.ContainsOwn("Non-Caster") => "Non-Caster",
                 var d when d.ContainsOwn("Critical") => "Critical",
                 var d when d.ContainsOwn("Influence") => "Influence",
@@ -218,6 +219,7 @@ namespace Harvester
                 "Non-Physical",
                 "Non-Defence",
                 "Non-Caster",
+                "Non-Attack",
                 "Non-Life"
             };
 
