@@ -522,7 +522,14 @@ namespace Harvester
                 return;
             }
 
-            Clipboard.SetText($"Hi. I'm selling **{context.Type}** for **{context.Price}** {context.Count}x");
+            if (context.Type.ContainsOwn("Special"))
+            {
+                Clipboard.SetText($"Hi. I'm selling \r\n **{context.Name}** \r\n for **{context.Price}** {context.Count}x");
+            }
+            else
+            {
+                Clipboard.SetText($"Hi. I'm selling **{context.Type}** for **{context.Price}** {context.Count}x");
+            }
         }
     }
 
