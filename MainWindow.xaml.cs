@@ -148,7 +148,7 @@ namespace Harvester
             }
         }
 
-        private string CheckBaseType(string name)
+        public string CheckBaseType(string name)
         {
             return name switch
             {
@@ -530,6 +530,12 @@ namespace Harvester
             {
                 Clipboard.SetText($"Hi. I'm selling **{context.Type}** for **{context.Price}** {context.Count}x");
             }
+        }
+
+        private void OpenUserControl(object sender, RoutedEventArgs e)
+        {
+            var window = new PoeStashWindow();
+            window.ShowDialog();
         }
     }
 

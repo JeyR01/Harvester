@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Harvester"
+        WindowStartupLocation="CenterScreen"
         mc:Ignorable="d"
         Title="Harvester" Height="450" Width="1400">
 
@@ -78,10 +79,11 @@
 
 
 
-        <StackPanel Grid.Row="2" HorizontalAlignment="Center" Orientation="Horizontal">
+        <StackPanel Grid.Row="2" HorizontalAlignment="Center" Orientation="Horizontal" Width="800">
             <Button  Width="100" Height="20" Click="CopyClipboard" Margin=" 0 0 30 0 ">Copy to Clipboard</Button>
             <Button  Width="80" Height="20" Click="Button_Click" Margin=" 0 0 40 0">Reset</Button>
             <Button  Width="80" Height="20" Click="Save_button">Save</Button>
+            <Button  Width="150" Margin="200 0 0 0" Height="20" Click="OpenUserControl">Read from POE Stash</Button>
         </StackPanel>
     </Grid>
 </Window>

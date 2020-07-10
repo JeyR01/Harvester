@@ -1,0 +1,31 @@
+﻿<Window x:Class="Harvester.PoeStashWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Harvester"
+        mc:Ignorable="d"
+        WindowStartupLocation="CenterScreen"
+        Title="PoeStashWindow" Height="300" Width="500">
+    <Grid>
+        <StackPanel Orientation="Vertical" VerticalAlignment="Center" HorizontalAlignment="Center">
+            <TextBlock Visibility="Collapsed" x:Name="dataRec" HorizontalAlignment="Center">Receiving data, please wait....</TextBlock>
+            <StackPanel x:Name="userPlane" Orientation="Vertical" VerticalAlignment="Center" HorizontalAlignment="Center">
+                <StackPanel Orientation="Horizontal" Height="20">
+                    <TextBlock Width="200">Please enter your username here:</TextBlock>
+                    <TextBox x:Name="UserNameText" Width="200"></TextBox>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Height="20">
+                    <TextBlock Width="200">Please enter your poesessid here:</TextBlock>
+                    <TextBox x:Name="PoeSessIdText" Width="200"></TextBox>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Height="20">
+                    <TextBlock Width="200">Please enter Stash Tab index here:</TextBlock>
+                    <TextBox x:Name="StashTabIndex" Width="200"></TextBox>
+                </StackPanel>
+            </StackPanel>
+            <Button Width="50" Height="20" Click="FinishButton">Finish</Button>
+        </StackPanel>
+
+    </Grid>
+</Window>
