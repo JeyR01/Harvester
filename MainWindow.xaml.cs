@@ -448,7 +448,7 @@ namespace Harvester
             {
                 b.Append("**Augment Lucky**: \r");
 
-                foreach (var item in notmixed.Where(p => p.Type.ContainsOwn("Add")))
+                foreach (var item in notmixed.Where(p => p.Type.ContainsOwn("Add") && p.Type.ContainsOwn("Lucky")))
                 {
                     b.Append($"-{item.Type.Split(" ")[1]} : **{item.Price}** \t {item.Count}x \r\n");
                 }
