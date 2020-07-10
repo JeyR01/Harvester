@@ -6,6 +6,13 @@
         xmlns:local="clr-namespace:Harvester"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="1200">
+
+    <Window.Resources>
+        <local:LockToBrushConverter x:Key="LockToBrushConverter" />
+        <local:LockToTextConverter x:Key="LockToTextConverter" />
+        <local:CountToBrushConverter x:Key="CountToBrushConverter" />
+        <local:CountToTextConverter x:Key="CountToTextConverter" />
+    </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="1*"></RowDefinition>
@@ -18,7 +25,47 @@
         </StackPanel>
 
 
-        <DataGrid Grid.Row="1" x:Name="datagrid"  HorizontalAlignment="Center" Width="1200" AutoGeneratingColumn="Datagrid_AutoGeneratingColumn" CanUserDeleteRows="False" CanUserAddRows="False"/>
+        <DataGrid ItemsSource="{Binding Harvests,UpdateSourceTrigger=PropertyChanged,Mode=TwoWay}" Grid.Row="1" x:Name="datagrid"  HorizontalAlignment="Center" Width="1200" AutoGenerateColumns="False" CanUserDeleteRows="False" CanUserAddRows="False">
+            <DataGrid.Columns>
+                <DataGridTemplateColumn Header="#">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Button Width="60" Content="{Binding Lock, Converter={StaticResource LockToTextConverter}}" Click="LockRow_click" Background="{Binding Lock, Converter={StaticResource LockToBrushConverter}}"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+
+                <DataGridTextColumn Header="Name" Binding="{Binding Name,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
+                
+                <DataGridTemplateColumn Header="Count">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBox Text="{Binding Count,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" PreviewTextInput="TextBox_PreviewTextInput" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTextColumn Header="Type" Binding="{Binding Type,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
+                <DataGridTextColumn Header="Price" Binding="{Binding Price,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
+                <DataGridTextColumn Header="Comment" Binding="{Binding Comment,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
+
+                <DataGridTemplateColumn Header="#">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Button Width="100" Content="{Binding Count, Converter={StaticResource CountToTextConverter}}" Click="Row_clicked" Background="{Binding Count, Converter={StaticResource CountToBrushConverter}}"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+
+                <DataGridTemplateColumn Header="#">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Button Width="50" Content="+1!" Background="Gold" Click="Row_clicked_plus"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+
+            </DataGrid.Columns>
+        </DataGrid>
 
 
 

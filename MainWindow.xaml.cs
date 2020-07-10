@@ -2,15 +2,18 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.Data;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Data;
+using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
@@ -34,13 +37,15 @@ namespace Harvester
     public partial class MainWindow : Window
     {
         static readonly string xmlPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "Harvester", "Crafts.xaml");
-        public ObservableCollection<HarvestData> Harvests;
+        public ObservableCollection<HarvestData> Harvests { get; set; }
 
         public MainWindow()
         {
+            Harvests = new ObservableCollection<HarvestData>();
+
             InitializeComponent();
             DataContext = this;
-            Harvests = new ObservableCollection<HarvestData>();
+
             DataObject.AddPastingHandler(copyfield, OnPaste);
             Loaded += MainWindow_Loaded;
 
@@ -63,32 +68,13 @@ namespace Harvester
                         Comment = node.ChildNodes[4].InnerText
                     };
 
+                    if(node.ChildNodes.Count >= 6)
+                    {
+                        harvest.Lock = Convert.ToBoolean(node.ChildNodes[5].InnerText);
+                    }
                     Harvests.Add(harvest);
-
-
                 }
             }
-
-            datagrid.ItemsSource = Harvests;
-
-
-            Dispatcher.InvokeAsync(() =>
-            {
-                var saleButtonColumn = datagrid.Columns.First(p => p.DisplayIndex == 6);
-                for (int i = 0; i < datagrid.Items.Count; i++)
-                {
-                    HarvestData data = (HarvestData)datagrid.Items[i];
-                    if (data.Count == 0)
-                    {
-                        var cell = saleButtonColumn.GetCellContent(datagrid.Items[i]);
-                        var button = (Button)VisualTreeHelper.GetChild(cell, 0);
-                        button.Background = Brushes.Red;
-                        button.Content = "Out of Stock!";
-                    }
-
-                }
-
-            }, DispatcherPriority.ApplicationIdle);
 
 
         }
@@ -111,6 +97,7 @@ namespace Harvester
                 writer.WriteElementString("Type", item.Type);
                 writer.WriteElementString("Price", item.Price);
                 writer.WriteElementString("Comment", item.Comment);
+                writer.WriteElementString("Lock", item.Lock.ToString());
 
                 writer.WriteEndElement();
             }
@@ -124,6 +111,7 @@ namespace Harvester
 
         public class HarvestData : INotifyPropertyChanged
         {
+            [Display(AutoGenerateField = false)]
             public bool Lock { get; set; }
             public string Name { get; set; }
 
@@ -151,8 +139,6 @@ namespace Harvester
             public string Type { get; set; }
             public string Price { get; set; }
             public string Comment { get; set; }
-            public string Sale { get; set; }
-            public string PlusOne { get; set; }
 
             public event PropertyChangedEventHandler PropertyChanged;
             private void OnPropertyChanged([CallerMemberName] string info = "")
@@ -220,7 +206,7 @@ namespace Harvester
                 "Speed",
                 "Critical",
                 "Influence"
-                
+
             };
             var nonlist = new List<string>
             {
@@ -245,7 +231,7 @@ namespace Harvester
                 }
             }
 
-            if(init[0] == null)
+            if (init[0] == null)
             {
                 int i = 0;
                 foreach (var item in list)
@@ -254,7 +240,7 @@ namespace Harvester
                     {
                         init[i] = item;
                         i++;
-                        if(i == 2)
+                        if (i == 2)
                         {
                             break;
                         }
@@ -263,7 +249,7 @@ namespace Harvester
             }
             else
             {
-                var subs = name.Substring(name.IndexOf(init[0],StringComparison.OrdinalIgnoreCase)).Substring(init[0].Length);
+                var subs = name.Substring(name.IndexOf(init[0], StringComparison.OrdinalIgnoreCase)).Substring(init[0].Length);
                 foreach (var item in list)
                 {
                     if (subs.ContainsOwn(item))
@@ -280,7 +266,7 @@ namespace Harvester
             }
             else
             {
-                if (name.IndexOf(init[0],StringComparison.OrdinalIgnoreCase) < name.IndexOf(init[1],StringComparison.OrdinalIgnoreCase))
+                if (name.IndexOf(init[0], StringComparison.OrdinalIgnoreCase) < name.IndexOf(init[1], StringComparison.OrdinalIgnoreCase))
                 {
                     return (init[0], init[1]);
                 }
@@ -303,7 +289,7 @@ namespace Harvester
 
         private string ChangeType(string name)
         {
-            
+
             var ret = CraftTypeMixed(name);
             return $"Change {ret.Item1} to {ret.Item2}";
         }
@@ -363,7 +349,6 @@ namespace Harvester
                 }
             }
             e.Handled = true;
-            //datagrid.Items.Refresh();
         }
 
         private void Copyfield_Executed(object sender, ExecutedRoutedEventArgs e)
@@ -385,7 +370,7 @@ namespace Harvester
             {
                 Harvests.Remove(item);
             }
-            
+
         }
 
         private void Row_clicked(object sender, RoutedEventArgs e)
@@ -396,11 +381,6 @@ namespace Harvester
             }
             var h = Harvests.First(p => p.Name == context.Name);
             h.Count--;
-            if (h.Count == 0)
-            {
-                ((Button)sender).Background = Brushes.Red;
-                ((Button)sender).Content = "Out of Stock!";
-            }
 
         }
 
@@ -411,22 +391,8 @@ namespace Harvester
                 return;
             }
             var h = Harvests.First(p => p.Name == context.Name);
-            if (h.Count == 0)
-            {
-                h.Count++;
-                var saleButtonColumn = datagrid.Columns.First(p => p.DisplayIndex == 6);
-                var rowIndex = datagrid.Items.IndexOf(h);
 
-                var cell = saleButtonColumn.GetCellContent(h);
-                var button = (Button)VisualTreeHelper.GetChild(cell, 0);
-                button.Background = Brushes.LightSeaGreen;
-                button.Content = "Sold!";
-            }
-            else
-            {
-                h.Count++;
-
-            }
+            h.Count++;
 
         }
 
@@ -451,65 +417,13 @@ namespace Harvester
 
             }
 
-
-            //((Button)sender).Background = Brushes.LightGreen;
-
-            //datagrid.Items.Refresh();
-
-        }
-
-        private void Datagrid_AutoGeneratingColumn(object sender, DataGridAutoGeneratingColumnEventArgs e)
-        {
-            if (e.PropertyName == "Sale")
-            {
-                DataGridTemplateColumn buttonColumn = new DataGridTemplateColumn();
-                DataTemplate buttonTemplate = new DataTemplate();
-                FrameworkElementFactory buttonFactory = new FrameworkElementFactory(typeof(Button));
-                buttonTemplate.VisualTree = buttonFactory;
-                buttonFactory.AddHandler(Button.ClickEvent, new RoutedEventHandler(Row_clicked));
-                buttonFactory.SetBinding(Button.ContentProperty, new Binding("#"));
-                buttonFactory.SetValue(Button.ContentProperty, "Sold!");
-                buttonFactory.SetValue(Button.BackgroundProperty, Brushes.LightSeaGreen);
-                buttonColumn.CellTemplate = buttonTemplate;
-                e.Column = buttonColumn;
-                e.Column.Header = "#";
-            }
-
-            if (e.PropertyName == "PlusOne")
-            {
-                DataGridTemplateColumn buttonColumn = new DataGridTemplateColumn();
-                DataTemplate buttonTemplate = new DataTemplate();
-                FrameworkElementFactory buttonFactory = new FrameworkElementFactory(typeof(Button));
-                buttonTemplate.VisualTree = buttonFactory;
-                buttonFactory.AddHandler(Button.ClickEvent, new RoutedEventHandler(Row_clicked_plus));
-                buttonFactory.SetBinding(Button.ContentProperty, new Binding("#"));
-                buttonFactory.SetValue(Button.ContentProperty, "+1!");
-                buttonFactory.SetValue(Button.BackgroundProperty, Brushes.Gold);
-                buttonColumn.CellTemplate = buttonTemplate;
-                e.Column = buttonColumn;
-                e.Column.Header = "#";
-            }
-            if (e.PropertyName == "Lock")
-            {
-                DataGridTemplateColumn buttonColumn = new DataGridTemplateColumn();
-                DataTemplate buttonTemplate = new DataTemplate();
-                FrameworkElementFactory buttonFactory = new FrameworkElementFactory(typeof(Button));
-                buttonTemplate.VisualTree = buttonFactory;
-                buttonFactory.AddHandler(Button.ClickEvent, new RoutedEventHandler(LockRow_click));
-                buttonFactory.SetBinding(Button.ContentProperty, new Binding("#"));
-                buttonFactory.SetValue(Button.ContentProperty, "Lock!");
-                buttonFactory.SetValue(Button.BackgroundProperty, Brushes.LightGreen);
-                buttonColumn.CellTemplate = buttonTemplate;
-                e.Column = buttonColumn;
-                e.Column.Header = "#";
-            }
         }
 
         private void CopyClipboard(object sender, RoutedEventArgs e)
         {
             var b = new StringBuilder();
 
-            var harvestbase = Harvests.Where(p => !p.Lock && p.Count != 0 && p.Type != "Special" &&!p.Type.ContainsOwn("Change"));
+            var harvestbase = Harvests.Where(p => !p.Lock && p.Count != 0 && p.Type != "Special" && !p.Type.ContainsOwn("Change"));
 
             var changebase = Harvests.Where(p => !p.Lock && p.Count != 0 && p.Type.ContainsOwn("Change"));
 
@@ -590,9 +504,110 @@ namespace Harvester
                 }
             }
 
-            
+
 
             Clipboard.SetText(b.ToString());
+        }
+
+        private void TextBox_PreviewTextInput(object sender, TextCompositionEventArgs e)
+        {
+            e.Handled = new Regex("[^0-9]+").IsMatch(e.Text);
+        }
+    }
+
+    public class LockToBrushConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        {
+            if(value is bool ret)
+            {
+                return ret ? Brushes.Red : Brushes.LightGreen;
+            }
+            return Brushes.LightGreen;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        {
+            if (value is SolidColorBrush boolean)
+            {
+                if (boolean == Brushes.LightGreen)
+                    return true;
+                else
+                    return false;
+            }
+            return false;
+        }
+    }
+
+    public class LockToTextConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        {
+            if (value is bool ret)
+            {
+                return ret ? "Unlock!" : "Lock!";
+            }
+            return "Lock!";
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        {
+            if (value is string boolean)
+            {
+                if (boolean == "Lock!")
+                    return true;
+                else
+                    return false;
+            }
+            return false;
+        }
+    }
+
+    public class CountToBrushConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        {
+            if (value is int ret)
+            {
+                return ret == 0 ? Brushes.Red : Brushes.LightGreen;
+            }
+            return Brushes.LightGreen;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture) // this is useless, 
+        {
+            if (value is SolidColorBrush boolean)
+            {
+                if (boolean == Brushes.LightGreen)
+                    return 0;
+                else
+                    return 1;
+            }
+            return false;
+        }
+    }
+
+    public class CountToTextConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        {
+            if (value is int ret)
+            {
+                return ret == 0 ? "Out of Stock!" : "Sold!";
+            }
+            return "Lock!";
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture) //useless
+        {
+            if (value is string boolean)
+            {
+                if (boolean == "Sold!")
+                    return 0;
+                else
+                    return 1;
+            }
+            return false;
         }
     }
 
