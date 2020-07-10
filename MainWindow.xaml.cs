@@ -48,7 +48,8 @@ namespace Harvester
 
             DataObject.AddPastingHandler(copyfield, OnPaste);
             Loaded += MainWindow_Loaded;
-
+            Closed += delegate { Save_button(null, null); };
+            
         }
 
         private void MainWindow_Loaded(object sender, RoutedEventArgs e)
@@ -79,7 +80,7 @@ namespace Harvester
 
         }
 
-        private void Save_button(object sender, RoutedEventArgs e)
+        public void Save_button(object sender, RoutedEventArgs e)
         {
 
             _ = Directory.CreateDirectory(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "Harvester"));
