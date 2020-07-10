@@ -537,6 +537,16 @@ namespace Harvester
             var window = new PoeStashWindow();
             window.ShowDialog();
         }
+
+        private void DeleteRow(object sender, RoutedEventArgs e)
+        {
+            if (!(((Button)sender).DataContext is HarvestData context))
+            {
+                return;
+            }
+
+            Harvests.Remove(context);
+        }
     }
 
     public class LockToBrushConverter : IValueConverter

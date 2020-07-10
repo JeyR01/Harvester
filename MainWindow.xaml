@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:Harvester"
         WindowStartupLocation="CenterScreen"
         mc:Ignorable="d"
-        Title="Harvester" Height="450" Width="1400">
+        Title="Harvester" Height="450" Width="1500">
 
     <Window.Resources>
         <local:LockToBrushConverter x:Key="LockToBrushConverter" />
@@ -69,6 +69,14 @@
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <Button Width="70" Content="Copy row" Background="Magenta" Click="CopyRow"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+
+                <DataGridTemplateColumn Header="#">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Button Width="70" Content="Delete Row" Background="Red" Click="DeleteRow"/>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
