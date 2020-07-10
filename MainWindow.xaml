@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Harvester"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="1200">
+        Title="MainWindow" Height="450" Width="1400">
 
     <Window.Resources>
         <local:LockToBrushConverter x:Key="LockToBrushConverter" />
@@ -25,7 +25,7 @@
         </StackPanel>
 
 
-        <DataGrid ItemsSource="{Binding Harvests,UpdateSourceTrigger=PropertyChanged,Mode=TwoWay}" Grid.Row="1" x:Name="datagrid"  HorizontalAlignment="Center" Width="1200" AutoGenerateColumns="False" CanUserDeleteRows="False" CanUserAddRows="False">
+        <DataGrid ItemsSource="{Binding Harvests,UpdateSourceTrigger=PropertyChanged,Mode=TwoWay}" Grid.Row="1" x:Name="datagrid"  HorizontalAlignment="Stretch" VerticalAlignment="Stretch" AutoGenerateColumns="False" CanUserDeleteRows="False" CanUserAddRows="False">
             <DataGrid.Columns>
                 <DataGridTemplateColumn Header="#">
                     <DataGridTemplateColumn.CellTemplate>
@@ -60,6 +60,14 @@
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <Button Width="50" Content="+1!" Background="Gold" Click="Row_clicked_plus"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+
+                <DataGridTemplateColumn Header="#">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Button Width="70" Content="Copy row" Background="Magenta" Click="CopyRow"/>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>

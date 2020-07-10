@@ -513,6 +513,16 @@ namespace Harvester
         {
             e.Handled = new Regex("[^0-9]+").IsMatch(e.Text);
         }
+
+        private void CopyRow(object sender, RoutedEventArgs e)
+        {
+            if (!(((Button)sender).DataContext is HarvestData context))
+            {
+                return;
+            }
+
+            Clipboard.SetText($"Hi. I'm selling **{context.Type}** for **{context.Price}** {context.Count}x");
+        }
     }
 
     public class LockToBrushConverter : IValueConverter
