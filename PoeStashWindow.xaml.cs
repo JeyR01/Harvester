@@ -69,7 +69,7 @@ namespace Harvester
             using var handler = new HttpClientHandler() { CookieContainer = cookieContainer };
             
             using var client = new HttpClient(handler) { BaseAddress = baseAddress };
-            client.DefaultRequestHeaders.Add("user-agent", "Harvest Beta 3.1, Horticrafting station extraction tool");
+            client.DefaultRequestHeaders.Add("User-Agent", "Harvest Beta 3_1 Horticrafting station extraction tool");
             cookieContainer.Add(baseAddress, new Cookie("POESESSID", PoeSessIdText.Text));
             var result = await client.PostAsync(baseAddress, null);
 
@@ -102,7 +102,7 @@ namespace Harvester
                         if (name == "Horticrafting Station")
                         {
                             var mods = (JArray)item["craftedMods"];
-                            if (mods.Count != 0)
+                            if (mods != null && mods.Count != 0)
                             {
                                 foreach (var mod in mods)
                                 {
