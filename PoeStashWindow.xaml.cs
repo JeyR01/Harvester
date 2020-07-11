@@ -67,7 +67,9 @@ namespace Harvester
             var baseAddress = new Uri("https://www.pathofexile.com/character-window/get-stash-items?league=Harvest&tabs=0&tabIndex=" + (res-1).ToString() + "&accountName=" + UserNameText.Text);
             var cookieContainer = new CookieContainer();
             using var handler = new HttpClientHandler() { CookieContainer = cookieContainer };
+            
             using var client = new HttpClient(handler) { BaseAddress = baseAddress };
+            client.DefaultRequestHeaders.Add("user-agent", "Harvest Beta 3.1, Horticrafting station extraction tool");
             cookieContainer.Add(baseAddress, new Cookie("POESESSID", PoeSessIdText.Text));
             var result = await client.PostAsync(baseAddress, null);
 
