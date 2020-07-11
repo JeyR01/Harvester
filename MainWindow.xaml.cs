@@ -495,7 +495,7 @@ namespace Harvester
                 }
             }
 
-            if (Harvests.Any(p => p.Type.ContainsOwn("Special")))
+            if (Harvests.Any(p => p.Type.ContainsOwn("Special") &&!p.Lock && p.Count != 0))
             {
                 b.Append("\r\n **Special crafts**: \r ");
 
