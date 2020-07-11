@@ -432,7 +432,7 @@ namespace Harvester
 
             var mixed = harvestbase.Where(p => p.Type.ContainsOwn("/") && !p.Type.ContainsOwn("Non"));
             var mixedNon = harvestbase.Where(p => p.Type.ContainsOwn("/") && p.Type.ContainsOwn("Non"));
-
+            b.Append("**WTS**: \r");
 
             if (notmixed.Any(p => p.Type.ContainsOwn("Add") && !p.Type.ContainsOwn("Lucky")))
             {
