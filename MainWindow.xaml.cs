@@ -499,7 +499,7 @@ namespace Harvester
             {
                 b.Append("\r\n **Special crafts**: \r ");
 
-                foreach (var item in Harvests.Where(p => p.Type.ContainsOwn("Special")))
+                foreach (var item in Harvests.Where(p => p.Type.ContainsOwn("Special") && !p.Lock && p.Count != 0))
                 {
                     b.Append($"-{item.Name} : **{item.Price}** \t {item.Count}x \r\n");
                 }
