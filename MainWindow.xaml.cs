@@ -71,7 +71,8 @@ namespace Harvester
                             Type = node.ChildNodes[2].InnerText,
                             Price = node.ChildNodes[3].InnerText,
                             Comment = node.ChildNodes[4].InnerText,
-                            CraftType = (CraftTypes)Enum.Parse(typeof(CraftTypes), node.ChildNodes[5].InnerText)
+                            Lock = Convert.ToBoolean(node.ChildNodes[5].InnerText),
+                            CraftType = (CraftTypes)Enum.Parse(typeof(CraftTypes), node.ChildNodes[6].InnerText)
                         };
                         Harvests.Add(harvest);
                     }
