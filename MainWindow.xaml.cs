@@ -108,6 +108,7 @@ namespace Harvester
                 writer.WriteElementString("Price", item.Price);
                 writer.WriteElementString("Comment", item.Comment);
                 writer.WriteElementString("Lock", item.Lock.ToString());
+                writer.WriteElementString("CraftTypes", item.CraftType.ToString());
 
                 writer.WriteEndElement();
             }
