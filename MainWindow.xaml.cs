@@ -271,6 +271,8 @@ namespace Harvester
                 "Caster",
                 "Fire",
                 "Speed",
+                "Elder Fragment",
+                "Shaper Fragment",
                 "Critical",
                 "Influence"
 
