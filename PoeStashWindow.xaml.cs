@@ -69,20 +69,15 @@ namespace Harvester
             using var handler = new HttpClientHandler() { CookieContainer = cookieContainer };
 
             using var client = new HttpClient(handler) { BaseAddress = baseAddress };
-            client.DefaultRequestHeaders.Add("User-Agent", "Harvest Beta 3_1 Horticrafting station extraction tool");
+            client.DefaultRequestHeaders.Add("User-Agent", "Harvest Beta 3_1 Horticrafting station extraction tool githubdotcomslashJeyR01slashHarvester");
             cookieContainer.Add(baseAddress, new Cookie("POESESSID", PoeSessIdText.Text));
             var result = await client.PostAsync(baseAddress, null);
 
             if (result.IsSuccessStatusCode)
             {
                 var resp = await result.Content.ReadAsStringAsync();
-
                 try
                 {
-
-
-
-
                     JObject jsont = JObject.Parse(resp);
 
                     JArray array = (JArray)jsont["items"];
@@ -138,7 +133,7 @@ namespace Harvester
                         }
                     }
                 }
-                catch
+                catch(Exception)
                 {
                     MessageBox.Show("Requesting Stash Tabs failed. Either the service is not available or your credentials are incorrect!");
                     button.IsEnabled = true;
@@ -149,11 +144,6 @@ namespace Harvester
                 MessageBox.Show("Successfully loaded the stash tab!");
 
                 App.Current.Windows.OfType<PoeStashWindow>().First().Close();
-
-
-
-
-
             }
             else
             {

@@ -13,20 +13,49 @@
         <local:LockToTextConverter x:Key="LockToTextConverter" />
         <local:CountToBrushConverter x:Key="CountToBrushConverter" />
         <local:CountToTextConverter x:Key="CountToTextConverter" />
+
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
     </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="1*"></RowDefinition>
+            <RowDefinition Height="2*"></RowDefinition>
             <RowDefinition Height="8*"></RowDefinition>
             <RowDefinition Height="2*"></RowDefinition>
         </Grid.RowDefinitions>
-        <StackPanel Orientation="Vertical" Grid.Row="0" Width="200" VerticalAlignment="Center" HorizontalAlignment="Center">
-            <TextBlock>Paste text here:</TextBlock>
-            <TextBox Tag="Paste text here"  x:Name="copyfield" CommandManager.Executed="Copyfield_Executed" KeyUp="Copyfield_KeyUp"/>
+        <StackPanel Orientation="Vertical" Grid.Row="0" Width="1000" VerticalAlignment="Center" HorizontalAlignment="Center">
+            <TextBlock Width="200">Paste text here:</TextBlock>
+            <TextBox  Width="200" Tag="Paste text here"  x:Name="copyfield" CommandManager.Executed="Copyfield_Executed" KeyUp="Copyfield_KeyUp"/>
+
+            <StackPanel VerticalAlignment="Center" HorizontalAlignment="Right" Orientation="Horizontal">
+                <TextBlock>Here you can filter by Type:</TextBlock>
+                <ComboBox Margin="30 0 0 0" SelectionChanged="ComboBox_SelectionChanged"  Width="100">
+                    <ComboBoxItem Content="All"/>
+                    <ComboBoxItem Content="Augment"/>
+                    <ComboBoxItem Content="Remove"/>
+                    <ComboBoxItem Content="Remove/Augment"/>
+                    <ComboBoxItem Content="Remove NON- /Augment"/>
+                    <ComboBoxItem Content="Reroll"/>
+                    <ComboBoxItem Content="Reforge"/>
+                    <ComboBoxItem Content="Enchant"/>
+                    <ComboBoxItem Content="Change"/>
+                    <ComboBoxItem Content="Add Influence"/>
+                </ComboBox>
+            </StackPanel>
         </StackPanel>
 
 
         <DataGrid ItemsSource="{Binding Harvests,UpdateSourceTrigger=PropertyChanged,Mode=TwoWay}" Grid.Row="1" x:Name="datagrid"  HorizontalAlignment="Stretch" VerticalAlignment="Stretch" AutoGenerateColumns="False" CanUserDeleteRows="False" CanUserAddRows="False">
+
+            <DataGrid.RowStyle>
+                <Style TargetType="{x:Type DataGridRow}">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding Hidden}" Value="True">
+                            <Setter Property="Visibility" Value="Collapsed"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </DataGrid.RowStyle>
+
             <DataGrid.Columns>
                 <DataGridTemplateColumn Header="#">
                     <DataGridTemplateColumn.CellTemplate>
@@ -37,7 +66,7 @@
                 </DataGridTemplateColumn>
 
                 <DataGridTextColumn Header="Name" Binding="{Binding Name,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
-                
+
                 <DataGridTemplateColumn Header="Count">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
