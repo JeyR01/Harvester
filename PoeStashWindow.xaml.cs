@@ -47,7 +47,7 @@ namespace Harvester
                 return;
             }
 
-            if(!int.TryParse(StashTabIndex.Text,out int res))
+            if (!int.TryParse(StashTabIndex.Text, out int res))
             {
                 MessageBox.Show("Please user a number for the Stash Tab Index.");
                 button.IsEnabled = true;
@@ -56,7 +56,7 @@ namespace Harvester
                 return;
             }
 
-            if( res <= 0)
+            if (res <= 0)
             {
                 MessageBox.Show("Stash Tab Index can't be negative or zero!");
                 button.IsEnabled = true;
@@ -64,10 +64,10 @@ namespace Harvester
                 dataRec.Visibility = Visibility.Collapsed;
                 return;
             }
-            var baseAddress = new Uri("https://www.pathofexile.com/character-window/get-stash-items?league=Harvest&tabs=0&tabIndex=" + (res-1).ToString() + "&accountName=" + UserNameText.Text);
+            var baseAddress = new Uri("https://www.pathofexile.com/character-window/get-stash-items?league=Harvest&tabs=0&tabIndex=" + (res - 1).ToString() + "&accountName=" + UserNameText.Text);
             var cookieContainer = new CookieContainer();
             using var handler = new HttpClientHandler() { CookieContainer = cookieContainer };
-            
+
             using var client = new HttpClient(handler) { BaseAddress = baseAddress };
             client.DefaultRequestHeaders.Add("User-Agent", "Harvest Beta 3_1 Horticrafting station extraction tool");
             cookieContainer.Add(baseAddress, new Cookie("POESESSID", PoeSessIdText.Text));
@@ -87,7 +87,7 @@ namespace Harvester
 
                     JArray array = (JArray)jsont["items"];
 
-                    if (array.Count == 0)
+                    if (array == null || array.Count == 0)
                     {
                         MessageBox.Show("Couldn't find any stations in the selected stash tab!");
                         button.IsEnabled = true;
@@ -98,8 +98,13 @@ namespace Harvester
 
                     foreach (var item in array)
                     {
-                        var name = (string)item["typeLine"];
-                        if (name == "Horticrafting Station")
+                        var nametoken = item["typeLine"];
+                        if (nametoken == null)
+                        {
+                            continue;
+                        }
+                        var name = (string)nametoken;
+                        if (name != null && name == "Horticrafting Station")
                         {
                             var mods = (JArray)item["craftedMods"];
                             if (mods != null && mods.Count != 0)
@@ -133,7 +138,7 @@ namespace Harvester
                         }
                     }
                 }
-                catch 
+                catch
                 {
                     MessageBox.Show("Requesting Stash Tabs failed. Either the service is not available or your credentials are incorrect!");
                     button.IsEnabled = true;
@@ -145,9 +150,9 @@ namespace Harvester
 
                 App.Current.Windows.OfType<PoeStashWindow>().First().Close();
 
-                
 
-                
+
+
 
             }
             else
