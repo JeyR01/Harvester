@@ -262,12 +262,14 @@ namespace Harvester
                 "Physical",
                 "Chaos",
                 "Attack",
+                "Map",
                 "Suffix",
                 "Prefix",
                 "Lightning",
                 "Cold",
                 "Defence",
                 "Life",
+                "Unique",
                 "Caster",
                 "Fire",
                 "Speed",
@@ -394,7 +396,7 @@ namespace Harvester
             bass += firststring switch
             {
                 var d when d.ContainsOwn("Weapon") => "Weapon",
-                var d when d.ContainsOwn("Armor") => "Armor",
+                var d when d.ContainsOwn("Armour") => "Armour",
                 var d when d.ContainsOwn("Map") => "Map",
                 var d when d.ContainsOwn("Flask") => "Flask",
                 var d when d.ContainsOwn("Jewelry") => "Jewelry",
