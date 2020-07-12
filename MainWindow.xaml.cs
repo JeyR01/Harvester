@@ -235,6 +235,8 @@ namespace Harvester
                 var d when d.ContainsOwn("Defence") => "Defence",
                 var d when d.ContainsOwn("Life") => "Life",
                 var d when d.ContainsOwn("Caster") => "Caster",
+                var d when d.ContainsOwn("Chaos") => "Chaos",
+                var d when d.ContainsOwn("Non-Chaos") => "Non-Chaos",
                 var d when d.ContainsOwn("Fire") => "Fire",
                 var d when d.ContainsOwn("Non-Fire") => "Non-Fire",
                 var d when d.ContainsOwn("Speed") => "Speed",
