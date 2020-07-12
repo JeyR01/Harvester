@@ -240,6 +240,7 @@ namespace Harvester
                 var d when d.ContainsOwn("Fire") => "Fire",
                 var d when d.ContainsOwn("Non-Fire") => "Non-Fire",
                 var d when d.ContainsOwn("Speed") => "Speed",
+                var d when d.ContainsOwn("White") => "White socket",
                 var d when d.ContainsOwn("Non-Speed") => "Non-Speed",
                 var d when d.ContainsOwn("Non-Life") => "Non-Life",
                 var d when d.ContainsOwn("Non-Physical") => "Non-Physical",
