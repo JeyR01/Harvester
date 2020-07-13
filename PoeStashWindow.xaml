@@ -19,12 +19,27 @@
                     <TextBlock Width="200">Please enter your poesessid here:</TextBlock>
                     <TextBox x:Name="PoeSessIdText" Width="200"></TextBox>
                 </StackPanel>
-                <StackPanel Orientation="Horizontal" Height="20">
-                    <TextBlock Width="200">Please enter Stash Tab index here:</TextBlock>
-                    <TextBox x:Name="StashTabIndex" Width="200"></TextBox>
-                </StackPanel>
+                <Grid Height="40">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <Grid Grid.Column="0" Height="45">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="9*"/>
+                            <RowDefinition Height="8*"/>
+                        </Grid.RowDefinitions>
+                        <TextBlock Padding="0 8 0 0" Grid.Row="0" TextAlignment="Center" Width="200" Height="30">Please enter Stash Tab index here:</TextBlock>
+                        <TextBlock Margin="0 0 0 10" Grid.Row="1" TextAlignment="Center" Width="200" Height="20" FontSize="10">(You can separate them by commas ( , ))</TextBlock>
+                    </Grid>
+                    <TextBox Grid.Column="1" Height="20" x:Name="StashTabIndex" Width="200"></TextBox>
+                </Grid>
             </StackPanel>
-            <Button Width="50" Height="20" Click="FinishButton">Finish</Button>
+            
+            <StackPanel>
+                <Button Width="50" Height="20" Click="FinishButton">Finish</Button>
+                <Button x:Name="detailsButton" Visibility="Hidden" Width="144" Height="20" Click="Button_Click">Use last update details</Button>
+            </StackPanel>
         </StackPanel>
 
     </Grid>

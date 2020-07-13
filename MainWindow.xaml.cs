@@ -37,6 +37,7 @@ namespace Harvester
     public partial class MainWindow : Window
     {
         static readonly string xmlPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "Harvester", "Crafts.xaml");
+        
         public ObservableCollection<HarvestData> Harvests { get; set; }
 
         public MainWindow()
@@ -88,10 +89,7 @@ namespace Harvester
 
         public void Save_button(object sender, RoutedEventArgs e)
         {
-            if (!Harvests.Any())
-            {
-                return;
-            }
+            
 
             _ = Directory.CreateDirectory(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "Harvester"));
 
