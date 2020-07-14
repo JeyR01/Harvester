@@ -129,7 +129,8 @@ namespace Harvester
             Enchant,//
             Reroll,//
             Reforge,//
-            Special//
+            Special,
+            Fracture
         }
 
         public class HarvestData : INotifyPropertyChanged
@@ -189,6 +190,7 @@ namespace Harvester
             return type switch
             {
                 var d when d.ContainsOwn("Enchant") => CraftTypes.Enchant,
+                var d when d.ContainsOwn("Fracture") => CraftTypes.Fracture,
                 var d when d.ContainsOwn("Reforge") => CraftTypes.Reforge,
                 var d when d.ContainsOwn("Reroll") => CraftTypes.Reroll,
                 var d when d.ContainsOwn("Change") => CraftTypes.ChangeRes,
@@ -211,6 +213,7 @@ namespace Harvester
                 var d when d.ContainsOwn("Reroll") || d.ContainsOwn("Randomise") => RerollType(name),
                 var d when d.ContainsOwn("Enchant") => EnchantType(name),
                 var d when d.ContainsOwn("Reforge") => ReforgeType(name),
+                var d when d.ContainsOwn("Fracture") => FractureType(name),
                 var d when d.ContainsOwn("Influence") => InfluenceType(name), // works because augment is check before influence,
                 _ => "Special"
             };
@@ -238,6 +241,8 @@ namespace Harvester
                 var d when d.ContainsOwn("Fire") => "Fire",
                 var d when d.ContainsOwn("Non-Fire") => "Non-Fire",
                 var d when d.ContainsOwn("Speed") => "Speed",
+                var d when d.ContainsOwn("5") => "5", //for fracture
+                var d when d.ContainsOwn("3") => "3", //for fracture
                 var d when d.ContainsOwn("White") => "White socket",
                 var d when d.ContainsOwn("Non-Speed") => "Non-Speed",
                 var d when d.ContainsOwn("Non-Life") => "Non-Life",
@@ -420,6 +425,25 @@ namespace Harvester
             return bass;
         }
 
+        private string FractureType(string name)
+        {
+
+            
+            var basss = CraftTypeBase(name.Split('.')[0]);
+
+            var bass = $"Fracture {basss} ";
+            if (name.ContainsOwn("Prefix"))
+            {
+                bass += "Prefix";
+            }
+            if (name.ContainsOwn("Suffix"))
+            {
+                bass += "Suffix";
+            }
+
+            return bass;
+        }
+
         private string InfluenceType(string name)
         {
             var basss = CraftTypeBase(name);
@@ -581,7 +605,7 @@ namespace Harvester
 
             if (Harvests.Any(p => p.CraftType == CraftTypes.Remove && !p.Lock && p.Count != 0))
             {
-                b.Append("\r\n **Remove**: \r");
+                b.Append("\r\n**Remove**: \r");
 
                 foreach (var item in Harvests.Where(p => p.CraftType == CraftTypes.Remove && !p.Lock && p.Count != 0))
                 {
@@ -591,7 +615,7 @@ namespace Harvester
 
             if (Harvests.Any(p => p.CraftType == CraftTypes.RemoveAndAug && !p.Lock && p.Count != 0))
             {
-                b.Append("\r\n **Remove / Augment**: \r");
+                b.Append("\r\n**Remove / Augment**: \r");
 
                 foreach (var item in Harvests.Where(p => p.CraftType == CraftTypes.RemoveAndAug && !p.Lock && p.Count != 0))
                 {
@@ -601,7 +625,7 @@ namespace Harvester
 
             if (Harvests.Any(p => p.CraftType == CraftTypes.RemoveNonAndAug && !p.Lock && p.Count != 0))
             {
-                b.Append("\r\n **Remove NON / Augment**: \r ");
+                b.Append("\r\n**Remove NON / Augment**: \r");
 
                 foreach (var item in Harvests.Where(p => p.CraftType == CraftTypes.RemoveNonAndAug && !p.Lock && p.Count != 0))
                 {
@@ -611,7 +635,7 @@ namespace Harvester
 
             if (Harvests.Any(p => p.CraftType == CraftTypes.ChangeRes && !p.Lock && p.Count != 0))
             {
-                b.Append("\r\n **Change mods**: \r ");
+                b.Append("\r\n**Change mods**: \r");
 
                 foreach (var item in Harvests.Where(p => p.CraftType == CraftTypes.ChangeRes && !p.Lock && p.Count != 0))
                 {
@@ -621,7 +645,7 @@ namespace Harvester
 
             if (Harvests.Any(p => p.CraftType == CraftTypes.Enchant && !p.Lock && p.Count != 0))
             {
-                b.Append("\r\n **Enchants**: \r ");
+                b.Append("\r\n**Enchants**: \r");
 
                 foreach (var item in Harvests.Where(p => p.CraftType == CraftTypes.Enchant && !p.Lock && p.Count != 0))
                 {
@@ -631,7 +655,7 @@ namespace Harvester
 
             if (Harvests.Any(p => p.CraftType == CraftTypes.AddInfluence && !p.Lock && p.Count != 0))
             {
-                b.Append("\r\n **Add Influence**: \r ");
+                b.Append("\r\n**Add Influence**: \r");
 
                 foreach (var item in Harvests.Where(p => p.CraftType == CraftTypes.AddInfluence && !p.Lock && p.Count != 0))
                 {
@@ -641,7 +665,7 @@ namespace Harvester
 
             if (Harvests.Any(p => p.CraftType == CraftTypes.Reroll && !p.Lock && p.Count != 0))
             {
-                b.Append("\r\n **Rerolls**: \r ");
+                b.Append("\r\n**Rerolls**: \r");
 
                 foreach (var item in Harvests.Where(p => p.CraftType == CraftTypes.Reroll && !p.Lock && p.Count != 0))
                 {
@@ -651,7 +675,7 @@ namespace Harvester
 
             if (Harvests.Any(p => p.CraftType == CraftTypes.Reforge && !p.Lock && p.Count != 0))
             {
-                b.Append("\r\n **Reforges**: \r ");
+                b.Append("\r\n**Reforges**: \r");
 
                 foreach (var item in Harvests.Where(p => p.CraftType == CraftTypes.Reforge && !p.Lock && p.Count != 0))
                 {
@@ -661,7 +685,7 @@ namespace Harvester
 
             if (Harvests.Any(p => p.CraftType == CraftTypes.Special && !p.Lock && p.Count != 0))
             {
-                b.Append("\r\n **Special crafts**: \r ");
+                b.Append("\r\n**Special crafts**: \r");
 
                 foreach (var item in Harvests.Where(p => p.CraftType == CraftTypes.Special && !p.Lock && p.Count != 0))
                 {
