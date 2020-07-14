@@ -130,7 +130,8 @@ namespace Harvester
             Reroll,//
             Reforge,//
             Special,
-            Fracture
+            Fracture,
+            Synthesised,
         }
 
         public class HarvestData : INotifyPropertyChanged
@@ -190,6 +191,7 @@ namespace Harvester
             return type switch
             {
                 var d when d.ContainsOwn("Enchant") => CraftTypes.Enchant,
+                var d when d.ContainsOwn("Synthesise") => CraftTypes.Synthesised,
                 var d when d.ContainsOwn("Fracture") => CraftTypes.Fracture,
                 var d when d.ContainsOwn("Reforge") => CraftTypes.Reforge,
                 var d when d.ContainsOwn("Reroll") => CraftTypes.Reroll,
@@ -428,8 +430,12 @@ namespace Harvester
         private string FractureType(string name)
         {
 
-            
-            var basss = CraftTypeBase(name.Split('.')[0]);
+            var firstname = name.Split('.')[0];
+            if (firstname.ContainsOwn("Synthesise"))
+            {
+                return "Synthesise item";
+            }
+            var basss = CraftTypeBase(firstname);
 
             var bass = $"Fracture {basss} ";
             if (name.ContainsOwn("Prefix"))
@@ -581,15 +587,6 @@ namespace Harvester
         private void CopyClipboard(object sender, RoutedEventArgs e)
         {
             var b = new StringBuilder();
-
-            //var harvestbase = Harvests.Where(p => !p.Lock && p.Count != 0 && p.Type != "Special" && !p.Type.ContainsOwn("Change"));
-
-            //var changebase = Harvests.Where(p => !p.Lock && p.Count != 0 && p.Type.ContainsOwn("Change"));
-
-            //var notmixed = harvestbase.Where(p => !p.Type.ContainsOwn("/"));
-
-            //var mixed = harvestbase.Where(p => p.Type.ContainsOwn("/") && !p.Type.ContainsOwn("Non"));
-            //var mixedNon = harvestbase.Where(p => p.Type.ContainsOwn("/") && p.Type.ContainsOwn("Non"));
             b.Append("**WTS**: \r");
 
             if (Harvests.Any(p => p.CraftType == CraftTypes.Augment && !p.Lock && p.Count != 0))
@@ -678,6 +675,26 @@ namespace Harvester
                 b.Append("\r\n**Reforges**: \r");
 
                 foreach (var item in Harvests.Where(p => p.CraftType == CraftTypes.Reforge && !p.Lock && p.Count != 0))
+                {
+                    b.Append($"-{item.Type} : **{item.Price}** \t {item.Count}x \r\n");
+                }
+            }
+
+            if (Harvests.Any(p => p.CraftType == CraftTypes.Synthesised && !p.Lock && p.Count != 0))
+            {
+                b.Append("\r\n**Synthesise crafts**: \r");
+
+                foreach (var item in Harvests.Where(p => p.CraftType == CraftTypes.Synthesised && !p.Lock && p.Count != 0))
+                {
+                    b.Append($"-{item.Type} : **{item.Price}** \t {item.Count}x \r\n");
+                }
+            }
+
+            if (Harvests.Any(p => p.CraftType == CraftTypes.Fracture && !p.Lock && p.Count != 0))
+            {
+                b.Append("\r\n**Fracture crafts**: \r");
+
+                foreach (var item in Harvests.Where(p => p.CraftType == CraftTypes.Fracture && !p.Lock && p.Count != 0))
                 {
                     b.Append($"-{item.Type} : **{item.Price}** \t {item.Count}x \r\n");
                 }

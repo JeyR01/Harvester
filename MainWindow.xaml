@@ -39,6 +39,9 @@
                     <ComboBoxItem Content="Enchant"/>
                     <ComboBoxItem Content="Change"/>
                     <ComboBoxItem Content="Add Influence"/>
+                    <ComboBoxItem Content="Synthesise"/>
+                    <ComboBoxItem Content="Fracture"/>
+                    <ComboBoxItem Content="Special"/>
                 </ComboBox>
             </StackPanel>
         </StackPanel>
