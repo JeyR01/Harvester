@@ -205,6 +205,25 @@ namespace Harvester
             };
         }
 
+        public static string EnumToString(CraftTypes type)
+        {
+            return type switch
+            {
+                (CraftTypes.Enchant) => "Enchants",
+                (CraftTypes.AddInfluence) => "Add influence",
+                (CraftTypes.Augment) => "Augments",
+                (CraftTypes.ChangeRes) => "Change",
+                (CraftTypes.Fracture) => "Fractures",
+                (CraftTypes.Reforge) => "Reforges",
+                (CraftTypes.Remove) => "Removes",
+                (CraftTypes.RemoveAndAug) => "Remove / Augment",
+                (CraftTypes.RemoveNonAndAug) => "Remove NON / Augment",
+                (CraftTypes.Reroll) => "Rerolls",
+                (CraftTypes.Synthesised) => "Synthesise",
+                _ => "Special"
+            };
+        }
+
         public string CheckBaseType(string name)
         {
             return name switch
@@ -783,6 +802,20 @@ namespace Harvester
             }
 
             datagrid.Items.Refresh();
+        }
+
+        private void CopyCurrent(object sender, RoutedEventArgs e)
+        {
+            var b = new StringBuilder();
+            var en = EnumToString(Harvests.First(p => !p.Hidden).CraftType);
+            b.Append($"\r\n**WTS**: \r");
+            b.Append($"**{en}**: \r");
+            foreach (var item in Harvests.Where(p => !p.Hidden && !p.Lock && p.Count != 0))
+            {
+                b.Append($"-{item.Type} : **{item.Price}** \t {item.Count}x \r\n");
+            }
+
+            Clipboard.SetText(b.ToString());
         }
     }
 
