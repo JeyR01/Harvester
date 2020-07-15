@@ -308,6 +308,7 @@ namespace Harvester
             {
                 "Non-Physical",
                 "Non-Defence",
+                "Non-Influenced",
                 "Non-Lightning",
                 "Non-Chaos",
                 "Non-Caster",
