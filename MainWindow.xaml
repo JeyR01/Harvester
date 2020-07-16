@@ -73,7 +73,7 @@
 
                 <DataGridTextColumn Header="Name" Binding="{Binding Name,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
 
-                <DataGridTemplateColumn Header="Count">
+                <!--<DataGridTemplateColumn Header="Count">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <TextBox Text="{Binding Count,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" PreviewTextInput="TextBox_PreviewTextInput" >
@@ -86,34 +86,52 @@
                                             <DataTrigger Binding="{Binding Count}" Value="1">
                                                 <Setter Property="Background" Value="White"/>
                                             </DataTrigger>
+                                            
                                         </Style.Triggers>
                                     </Style>
                                 </TextBox.Style>
                             </TextBox>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
-                <DataGridTemplateColumn Header="Type" >
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <TextBox Text="{Binding Type,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}">
-                                <TextBox.Style>
-                                    <Style TargetType="{x:Type TextBox}">
-                                        <Style.Triggers>
-                                            <DataTrigger Binding="{Binding Count}" Value="0">
-                                                <Setter Property="Background" Value="#f77777"/>
-                                            </DataTrigger>
-                                            <DataTrigger Binding="{Binding Count}" Value="1">
-                                                <Setter Property="Background" Value="White"/>
-                                            </DataTrigger>
-                                        </Style.Triggers>
-                                    </Style>
-                                </TextBox.Style>
-                            </TextBox>
-                        </DataTemplate>
+                </DataGridTemplateColumn>-->
+                <DataGridTextColumn IsReadOnly="True" Header="Count" Binding="{Binding Count,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style TargetType="{x:Type TextBlock}">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding Count}" Value="0">
+                                    <Setter Property="Background" Value="#f77777"/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding Count}" Value="1">
+                                    <Setter Property="Background" Value="White"/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding IsSelected, RelativeSource={RelativeSource AncestorType=DataGridCell}}" Value="True">
+                                    <Setter Property="Foreground" Value="Black"/>
+                                    <Setter Property="Background" Value="White"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
+                
+                <DataGridTextColumn Header="Type" Binding="{Binding Type,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}">
+                    <DataGridTextColumn.ElementStyle>
+                        <Style TargetType="{x:Type TextBlock}">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding Count}" Value="0">
+                                    <Setter Property="Background" Value="#f77777"/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding Count}" Value="1">
+                                    <Setter Property="Background" Value="White"/>
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding IsSelected, RelativeSource={RelativeSource AncestorType=DataGridCell}}" Value="True">
+                                    <Setter Property="Foreground" Value="Black"/>
+                                    <Setter Property="Background" Value="White"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </DataGridTextColumn.ElementStyle>
+                </DataGridTextColumn>
 
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
                 <DataGridTextColumn Header="Price" Binding="{Binding Price,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
                 <DataGridTextColumn Header="Comment" Binding="{Binding Comment,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
 
