@@ -228,14 +228,14 @@ namespace Harvester
         {
             return name switch
             {
-                var d when d.ContainsOwn("Remove") => RemoveType(name),
                 var d when d.ContainsOwn("Augment") => AugmentType(name),
+                var d when d.ContainsOwn("Remove") => RemoveType(name),
                 var d when d.ContainsOwn("Change") => ChangeType(name),
+                var d when d.ContainsOwn("Influence") => InfluenceType(name), // works because augment is check before influence,
                 var d when d.ContainsOwn("Reroll") || d.ContainsOwn("Randomise") => RerollType(name),
                 var d when d.ContainsOwn("Enchant") => EnchantType(name),
                 var d when d.ContainsOwn("Reforge") => ReforgeType(name),
                 var d when d.ContainsOwn("Fracture") => FractureType(name),
-                var d when d.ContainsOwn("Influence") => InfluenceType(name), // works because augment is check before influence,
                 _ => "Special"
             };
         }
@@ -308,7 +308,7 @@ namespace Harvester
             {
                 "Non-Physical",
                 "Non-Defence",
-                "Non-Influenced",
+                "Non-Influence",
                 "Non-Lightning",
                 "Non-Chaos",
                 "Non-Critical",
