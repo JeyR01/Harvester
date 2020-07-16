@@ -311,6 +311,7 @@ namespace Harvester
                 "Non-Influenced",
                 "Non-Lightning",
                 "Non-Chaos",
+                "Non-Critical",
                 "Non-Caster",
                 "Non-Cold",
                 "Non-Speed",
@@ -509,29 +510,38 @@ namespace Harvester
                 return;
             }
 
-            for (int i = 7; i < rows.Length; i++)
+            try
             {
-                if (rows[i].Contains("--"))
-                {
-                    break;
-                }
-                var strings = rows[i].Remove(rows[i].Length - 14);
 
-                if (Harvests.Any(p => p.Name == strings))
+
+                for (int i = 7; i < rows.Length; i++)
                 {
-                    Harvests.First(p => p.Name == strings).Count++;
-                }
-                else
-                {
-                    Harvests.Add(new HarvestData
+                    if (rows[i].Contains("--"))
                     {
-                        Comment = "Write a comment here!",
-                        Count = 1,
-                        Name = strings,
-                        Price = "40c",
-                        Type = CheckBaseType(strings)
-                    });
+                        break;
+                    }
+                    var strings = rows[i].Remove(rows[i].Length - 14);
+
+                    if (Harvests.Any(p => p.Name == strings))
+                    {
+                        Harvests.First(p => p.Name == strings).Count++;
+                    }
+                    else
+                    {
+                        Harvests.Add(new HarvestData
+                        {
+                            Comment = "Write a comment here!",
+                            Count = 1,
+                            Name = strings,
+                            Price = "40c",
+                            Type = CheckBaseType(strings)
+                        });
+                    }
                 }
+            }
+            catch (Exception)
+            {
+
             }
             e.Handled = true;
         }
@@ -666,7 +676,7 @@ namespace Harvester
 
                 foreach (var item in Harvests.Where(p => p.CraftType == CraftTypes.Enchant && !p.Lock && p.Count != 0))
                 {
-                    b.Append($"-{item.Type} : **{item.Price}** \t {item.Count}x \r\n");
+                    b.Append($"-{item.Name} : **{item.Price}** \t {item.Count}x \r\n");
                 }
             }
 
