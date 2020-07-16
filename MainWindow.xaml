@@ -48,7 +48,10 @@
 
 
         <DataGrid ItemsSource="{Binding Harvests,UpdateSourceTrigger=PropertyChanged,Mode=TwoWay}" Grid.Row="1" x:Name="datagrid"  HorizontalAlignment="Stretch" VerticalAlignment="Stretch" AutoGenerateColumns="False" CanUserDeleteRows="False" CanUserAddRows="False">
-
+            <!--<DataGrid.Resources>
+                <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" 
+                   Color="#2f4899"/>
+            </DataGrid.Resources>-->
             <DataGrid.RowStyle>
                 <Style TargetType="{x:Type DataGridRow}">
                     <Style.Triggers>
@@ -73,11 +76,44 @@
                 <DataGridTemplateColumn Header="Count">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <TextBox Text="{Binding Count,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" PreviewTextInput="TextBox_PreviewTextInput" />
+                            <TextBox Text="{Binding Count,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" PreviewTextInput="TextBox_PreviewTextInput" >
+                                <TextBox.Style>
+                                    <Style TargetType="{x:Type TextBox}">
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding Count}" Value="0">
+                                                <Setter Property="Background" Value="#f77777"/>
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding Count}" Value="1">
+                                                <Setter Property="Background" Value="White"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </TextBox.Style>
+                            </TextBox>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-                <DataGridTextColumn Header="Type" Binding="{Binding Type,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
+                <DataGridTemplateColumn Header="Type" >
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBox Text="{Binding Type,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}">
+                                <TextBox.Style>
+                                    <Style TargetType="{x:Type TextBox}">
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding Count}" Value="0">
+                                                <Setter Property="Background" Value="#f77777"/>
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding Count}" Value="1">
+                                                <Setter Property="Background" Value="White"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </TextBox.Style>
+                            </TextBox>
+                        </DataTemplate>
+
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
                 <DataGridTextColumn Header="Price" Binding="{Binding Price,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
                 <DataGridTextColumn Header="Comment" Binding="{Binding Comment,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
 
