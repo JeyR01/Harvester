@@ -37,13 +37,14 @@ namespace Harvester
     public partial class MainWindow : Window
     {
         static readonly string xmlPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "Harvester", "Crafts.xaml");
+        static readonly string TypeDicPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "Harvester", "TypeDictionary.xaml");
         
         public ObservableCollection<HarvestData> Harvests { get; set; }
 
         public MainWindow()
         {
             Harvests = new ObservableCollection<HarvestData>();
-
+            TypePrices = new Dictionary<string, string>();
             InitializeComponent();
             DataContext = this;
 
@@ -59,9 +60,16 @@ namespace Harvester
             {
                 try
                 {
-
-
                     XmlDocument xmlDoc = new XmlDocument();
+                    xmlDoc.Load(TypeDicPath);
+                    foreach (XmlNode node in xmlDoc.DocumentElement.ChildNodes)
+                    {
+                        var type = node.ChildNodes[0].InnerText;
+                        var price = node.ChildNodes[1].InnerText;
+                        TypePrices.Add(type, price);
+                    }
+
+                    xmlDoc = new XmlDocument();
                     xmlDoc.Load(xmlPath);
                     foreach (XmlNode node in xmlDoc.DocumentElement.ChildNodes)
                     {
@@ -77,6 +85,11 @@ namespace Harvester
                         };
                         Harvests.Add(harvest);
                     }
+
+
+                    
+
+
                 }
                 catch (Exception)
                 {
@@ -115,6 +128,30 @@ namespace Harvester
 
             writer.Flush();
             writer.Close();
+            SaveTypeDictionary();
+        }
+
+        public void SaveTypeDictionary()
+        {
+            //_ = Directory.CreateDirectory(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "Harvester"));
+
+            using XmlWriter writer = XmlWriter.Create(TypeDicPath);
+
+            writer.WriteStartElement("Prices");
+
+            foreach (var item in TypePrices)
+            {
+                writer.WriteStartElement("Craft");
+
+                writer.WriteElementString("Type", item.Key);
+                writer.WriteElementString("Price", item.Value);
+
+                writer.WriteEndElement();
+            }
+            writer.WriteEndElement();
+
+            writer.Flush();
+            writer.Close();
         }
 
 
@@ -136,6 +173,15 @@ namespace Harvester
 
         public class HarvestData : INotifyPropertyChanged
         {
+            public HarvestData(string type = null)
+            {
+                if(type != null)
+                {
+                    CraftType = CraftTypeEnumCheck(type);
+                    Type_ = type;
+                    Price_ = TryGetPriceFromDictionary(type);
+                }
+            }
             [Display(AutoGenerateField = false)]
             public bool Lock { get; set; }
             public string Name { get; set; }
@@ -172,17 +218,56 @@ namespace Harvester
                 }
                 set
                 {
-                    CraftType = CraftTypeEnumCheck(value);
                     Type_ = value;
+                    //CraftType = CraftTypeEnumCheck(value);
+                    //Type_ = value;
+                    //Price_ = TryGetPriceFromDictionary(value);
                 }
             }
-            public string Price { get; set; }
+            private string Price_ { get; set; }
+            public string Price { get
+                {
+                    return Price_;
+                }
+                set
+                {
+                    Price_ = value;
+                    UpdateTypePrice(Type,value);
+                }
+            }
             public string Comment { get; set; }
 
             public event PropertyChangedEventHandler PropertyChanged;
             private void OnPropertyChanged([CallerMemberName] string info = "")
             {
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(info));
+            }
+        }
+
+        public static Dictionary<string, string> TypePrices { get; set; }
+
+        public static string TryGetPriceFromDictionary(string type)
+        {
+            if (TypePrices.ContainsKey(type))
+            {
+                return TypePrices[type];
+            }
+            else
+            {
+                TypePrices.Add(type, "40c");
+                return "40c";
+            }
+        }
+
+        public static void UpdateTypePrice(string type,string newvalue)
+        {
+            if (TypePrices.ContainsKey(type))
+            {
+                TypePrices[type] = newvalue;
+            }
+            else
+            {
+                TypePrices.Add(type, newvalue);
             }
         }
 
@@ -512,8 +597,6 @@ namespace Harvester
 
             try
             {
-
-
                 for (int i = 7; i < rows.Length; i++)
                 {
                     if (rows[i].Contains("--"))
@@ -528,13 +611,13 @@ namespace Harvester
                     }
                     else
                     {
-                        Harvests.Add(new HarvestData
+                        Harvests.Add(new HarvestData(CheckBaseType(strings))
                         {
                             Comment = "Write a comment here!",
                             Count = 1,
                             Name = strings,
-                            Price = "40c",
-                            Type = CheckBaseType(strings)
+                            //Price = "40c",
+                            //Type = CheckBaseType(strings)
                         });
                     }
                 }

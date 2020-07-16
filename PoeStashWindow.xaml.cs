@@ -177,13 +177,13 @@ namespace Harvester
                                         }
                                         else
                                         {
-                                            Main.Harvests.Add(new HarvestData
+                                            Main.Harvests.Add(new HarvestData(Main.CheckBaseType(modname))
                                             {
                                                 Comment = "Write a comment here!",
                                                 Count = 1,
                                                 Name = modname,
-                                                Price = "40c",
-                                                Type = Main.CheckBaseType(modname)
+                                                //Price = "40c",
+                                                //Type = Main.CheckBaseType(modname)
                                             });
                                         }
 
