@@ -769,7 +769,7 @@ namespace Harvester
 
                 foreach (var item in Harvests.Where(p => p.CraftType == CraftTypes.AddInfluence && !p.Lock && p.Count != 0))
                 {
-                    b.Append($"-{item.Type} : **{item.Price}** \t {item.Count}x \r\n");
+                    b.Append($"-{item.Name} : **{item.Price}** \t {item.Count}x \r\n");
                 }
             }
 
