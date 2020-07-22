@@ -40,6 +40,12 @@
                 <Button Width="50" Height="20" Click="FinishButton">Finish</Button>
                 <Button x:Name="detailsButton" Visibility="Hidden" Width="144" Height="20" Click="Button_Click">Use last update details</Button>
             </StackPanel>
+            <TextBlock>Info: You can add notes to your stations in this format: 20c/40c/50c</TextBlock>
+            <TextBlock>If the note is not in a correct format, the default price for each craft is 40c</TextBlock>
+            <TextBlock>The prices for each craft is top to bottom, so 20c is the top craft on the station</TextBlock>
+            <TextBlock>If you set different prices for the same craft, the latest read price will be used</TextBlock>
+            <TextBlock>If you already saved a price, then you can use "-" character to ignore the note</TextBlock>
+            <TextBlock>So 20c/-/30c will ignore the middle craft</TextBlock>
         </StackPanel>
 
     </Grid>

@@ -190,6 +190,12 @@ namespace Harvester
 
             public CraftTypes CraftType { get; set; }
 
+            public void SetPrice(string price)
+            {
+                Price_ = price;
+                UpdateTypePrice(Type, price);
+            }
+
             private int Count_ { get; set; }
             public int Count
             {
@@ -316,11 +322,11 @@ namespace Harvester
                 var d when d.ContainsOwn("Augment") => AugmentType(name),
                 var d when d.ContainsOwn("Remove") => RemoveType(name),
                 var d when d.ContainsOwn("Change") => ChangeType(name),
+                var d when d.ContainsOwn("Fracture") => FractureType(name),
                 var d when d.ContainsOwn("Influence") => InfluenceType(name), // works because augment is check before influence,
                 var d when d.ContainsOwn("Reroll") || d.ContainsOwn("Randomise") => RerollType(name),
                 var d when d.ContainsOwn("Enchant") => EnchantType(name),
                 var d when d.ContainsOwn("Reforge") => ReforgeType(name),
-                var d when d.ContainsOwn("Fracture") => FractureType(name),
                 _ => "Special"
             };
         }
@@ -511,7 +517,7 @@ namespace Harvester
                 var d when d.ContainsOwn("Armour") => "Armour",
                 var d when d.ContainsOwn("Map") => "Map",
                 var d when d.ContainsOwn("Flask") => "Flask",
-                var d when d.ContainsOwn("Jewelry") => "Jewelry",
+                var d when d.ContainsOwn("Jewellery") => "Jewellery",
                 var d when d.ContainsOwn("Jewel") => "Jewel",
                 _ => "unknown"
             };
@@ -561,6 +567,13 @@ namespace Harvester
             var basss = CraftTypeBase(name);
 
             var bass = $"Add {basss} ";
+            bass += name switch
+            {
+                var d when d.ContainsOwn("Weapon") => "Weapon",
+                var d when d.ContainsOwn("Armour") => "Armour",
+                var d when d.ContainsOwn("Jewellery") => "Jewellery",
+                _ => ""
+            };
 
             return bass;
         }
@@ -700,132 +713,138 @@ namespace Harvester
         private void CopyClipboard(object sender, RoutedEventArgs e)
         {
             var b = new StringBuilder();
-            b.Append("**WTS**: \r");
+            b.Append("**WTS**:\r");
 
             if (Harvests.Any(p => p.CraftType == CraftTypes.Augment && !p.Lock && p.Count != 0))
             {
-                b.Append("**Augment**: \r");
+                b.Append("**Add**:\r");
 
 
                 foreach (var item in Harvests.Where(p => p.CraftType == CraftTypes.Augment && !p.Lock && p.Count != 0))
                 {
-                    b.Append($"-{item.Type.Split(" ")[1]} : **{item.Price}** \t {item.Count}x \r\n");
+                    b.Append($"{item.Type.Split(" ")[1]} : {item.Price}\t{item.Count}x\r\n");
                 }
             }
 
             if (Harvests.Any(p => p.CraftType == CraftTypes.Remove && !p.Lock && p.Count != 0))
             {
-                b.Append("\r\n**Remove**: \r");
+                b.Append("\r\n**Remove**:\r");
 
                 foreach (var item in Harvests.Where(p => p.CraftType == CraftTypes.Remove && !p.Lock && p.Count != 0))
                 {
-                    b.Append($"-{item.Type.Split(" ")[1]} : **{item.Price}** \t {item.Count}x \r\n");
+                    b.Append($"{item.Type.Split(" ")[1]} : {item.Price}\t{item.Count}x\r\n");
                 }
             }
 
             if (Harvests.Any(p => p.CraftType == CraftTypes.RemoveAndAug && !p.Lock && p.Count != 0))
             {
-                b.Append("\r\n**Remove / Augment**: \r");
+                b.Append("\r\n**Remove / Add**:\r");
 
                 foreach (var item in Harvests.Where(p => p.CraftType == CraftTypes.RemoveAndAug && !p.Lock && p.Count != 0))
                 {
-                    b.Append($"-{item.Type} : **{item.Price}** \t {item.Count}x \r\n");
+                    b.Append($"{item.Type} : {item.Price}\t{item.Count}x\r\n");
                 }
             }
 
             if (Harvests.Any(p => p.CraftType == CraftTypes.RemoveNonAndAug && !p.Lock && p.Count != 0))
             {
-                b.Append("\r\n**Remove NON / Augment**: \r");
+                b.Append("\r\n**Remove NON / Add**:\r");
 
                 foreach (var item in Harvests.Where(p => p.CraftType == CraftTypes.RemoveNonAndAug && !p.Lock && p.Count != 0))
                 {
-                    b.Append($"-{item.Type} : **{item.Price}** \t {item.Count}x \r\n");
+                    b.Append($"{item.Type} : {item.Price}\t{item.Count}x\r\n");
                 }
             }
 
             if (Harvests.Any(p => p.CraftType == CraftTypes.ChangeRes && !p.Lock && p.Count != 0))
             {
-                b.Append("\r\n**Change mods**: \r");
+                b.Append("\r\n**Change**:\r");
 
                 foreach (var item in Harvests.Where(p => p.CraftType == CraftTypes.ChangeRes && !p.Lock && p.Count != 0))
                 {
-                    b.Append($"-{item.Type} : **{item.Price}** \t {item.Count}x \r\n");
+                    b.Append($"{item.Type} : {item.Price}\t{item.Count}x\r\n");
                 }
             }
 
             if (Harvests.Any(p => p.CraftType == CraftTypes.Enchant && !p.Lock && p.Count != 0))
             {
-                b.Append("\r\n**Enchants**: \r");
+                b.Append("\r\n**Enchant**:\r");
 
                 foreach (var item in Harvests.Where(p => p.CraftType == CraftTypes.Enchant && !p.Lock && p.Count != 0))
                 {
-                    b.Append($"-{item.Name} : **{item.Price}** \t {item.Count}x \r\n");
+                    b.Append($"{item.Name} : {item.Price}\t{item.Count}x\r\n");
                 }
             }
 
             if (Harvests.Any(p => p.CraftType == CraftTypes.AddInfluence && !p.Lock && p.Count != 0))
             {
-                b.Append("\r\n**Add Influence**: \r");
+                b.Append("\r\n**Add Influence**:\r");
 
                 foreach (var item in Harvests.Where(p => p.CraftType == CraftTypes.AddInfluence && !p.Lock && p.Count != 0))
                 {
-                    b.Append($"-{item.Name} : **{item.Price}** \t {item.Count}x \r\n");
+                    b.Append($"{item.Type} : {item.Price}\t{item.Count}x\r\n");
                 }
             }
 
             if (Harvests.Any(p => p.CraftType == CraftTypes.Reroll && !p.Lock && p.Count != 0))
             {
-                b.Append("\r\n**Rerolls**: \r");
+                b.Append("\r\n**Reroll**:\r");
 
                 foreach (var item in Harvests.Where(p => p.CraftType == CraftTypes.Reroll && !p.Lock && p.Count != 0))
                 {
-                    b.Append($"-{item.Type} : **{item.Price}** \t {item.Count}x \r\n");
+                    b.Append($"{item.Type} : {item.Price}\t{item.Count}x\r\n");
                 }
             }
 
             if (Harvests.Any(p => p.CraftType == CraftTypes.Reforge && !p.Lock && p.Count != 0))
             {
-                b.Append("\r\n**Reforges**: \r");
+                b.Append("\r\n**Reforge**:\r");
 
                 foreach (var item in Harvests.Where(p => p.CraftType == CraftTypes.Reforge && !p.Lock && p.Count != 0))
                 {
-                    b.Append($"-{item.Type} : **{item.Price}** \t {item.Count}x \r\n");
+                    b.Append($"{item.Type} : {item.Price}\t{item.Count}x\r\n");
                 }
             }
 
             if (Harvests.Any(p => p.CraftType == CraftTypes.Synthesised && !p.Lock && p.Count != 0))
             {
-                b.Append("\r\n**Synthesise crafts**: \r");
+                b.Append("\r\n**Synthesise**:\r");
 
                 foreach (var item in Harvests.Where(p => p.CraftType == CraftTypes.Synthesised && !p.Lock && p.Count != 0))
                 {
-                    b.Append($"-{item.Type} : **{item.Price}** \t {item.Count}x \r\n");
+                    b.Append($"{item.Type} : {item.Price}\t{item.Count}x\r\n");
                 }
             }
 
             if (Harvests.Any(p => p.CraftType == CraftTypes.Fracture && !p.Lock && p.Count != 0))
             {
-                b.Append("\r\n**Fracture crafts**: \r");
+                b.Append("\r\n**Fracture**:\r");
 
                 foreach (var item in Harvests.Where(p => p.CraftType == CraftTypes.Fracture && !p.Lock && p.Count != 0))
                 {
-                    b.Append($"-{item.Type} : **{item.Price}** \t {item.Count}x \r\n");
+                    b.Append($"{item.Type} : {item.Price}\t{item.Count}x\r\n");
                 }
             }
 
             if (Harvests.Any(p => p.CraftType == CraftTypes.Special && !p.Lock && p.Count != 0))
             {
-                b.Append("\r\n**Special crafts**: \r");
+                b.Append("\r\n**Special**:\r");
 
                 foreach (var item in Harvests.Where(p => p.CraftType == CraftTypes.Special && !p.Lock && p.Count != 0))
                 {
-                    b.Append($"-{item.Name} : **{item.Price}** \t {item.Count}x \r\n");
+                    b.Append($"{item.Name} : {item.Price}\t{item.Count}x\r\n");
                 }
             }
 
 
-
-            Clipboard.SetText(b.ToString());
+            try
+            {
+                Clipboard.SetText(b.ToString());
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("Couldn't copy table to clipboard. Please disable trade companion :) ");
+            }
         }
 
         private void TextBox_PreviewTextInput(object sender, TextCompositionEventArgs e)

@@ -164,27 +164,56 @@ namespace Harvester
                                 var mods = (JArray)item["craftedMods"];
                                 if (mods != null && mods.Count != 0)
                                 {
-                                    foreach (var mod in mods)
+                                    var note = item["note"];
+                                    string[] priceNotes = new string[3] { "40c", "40c", "40c" };
+                                    if(note != null)
                                     {
-                                        var modname = (string)mod;
+                                        try
+                                        {
+                                            var notsplit = (string)note;
+                                            if (notsplit.Count(p => p == '/') == 2)
+                                            {
+                                                priceNotes = notsplit.Split("/");
+                                            }
+                                           
+                                        }
+                                        catch (Exception)
+                                        {
+
+                                        }
+                                    }
+                                    for (int i = 0; i < mods.Count; i++)
+                                    {
+                                        var modname = (string)mods[i];
                                         modname = modname.Replace("{", string.Empty).Replace("}", string.Empty).Replace("<white>", string.Empty);
                                         modname = modname.Remove(modname.Length - 4, 4);
 
 
                                         if (Main.Harvests.Any(p => p.Name == modname))
                                         {
-                                            Main.Harvests.First(p => p.Name == modname).Count++;
+                                            var craft = Main.Harvests.First(p => p.Name == modname);
+                                            craft.Count++;
+                                            if(priceNotes[i] != "-")
+                                            {
+                                                craft.SetPrice(priceNotes[i]);
+                                            }
                                         }
                                         else
                                         {
-                                            Main.Harvests.Add(new HarvestData(Main.CheckBaseType(modname))
+                                            var craft = new HarvestData(Main.CheckBaseType(modname))
                                             {
                                                 Comment = "Write a comment here!",
                                                 Count = 1,
                                                 Name = modname,
                                                 //Price = "40c",
                                                 //Type = Main.CheckBaseType(modname)
-                                            });
+                                            };
+                                            Main.Harvests.Add(craft);
+
+                                            if (priceNotes[i] != "-")
+                                            {
+                                                craft.SetPrice(priceNotes[i]);
+                                            }
                                         }
 
                                         //<white>{Remove} a random <white>{non-Life} modifier from an item and <white>{add} a new <white>{Life} modifier (78)
