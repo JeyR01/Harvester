@@ -165,7 +165,7 @@ namespace Harvester
                                 if (mods != null && mods.Count != 0)
                                 {
                                     var note = item["note"];
-                                    string[] priceNotes = new string[3] { "40c", "40c", "40c" };
+                                    string[] priceNotes = new string[3] { "-", "-", "-" };
                                     if(note != null)
                                     {
                                         try
