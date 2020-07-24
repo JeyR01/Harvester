@@ -529,8 +529,17 @@ namespace Harvester
 
             //var ret = CraftTypeBase(name);
             var basss = CraftTypeBase(name);
+            var bass = $"Reforge ";
 
-            var bass = $"Reforge {basss} ";
+            if (basss == "Suffix")
+            {
+                bass += "Prefix";
+            }
+            else if(basss == "Prefix")
+            {
+                bass += "Suffix";
+            }
+
             if (name.ContainsOwn("Common"))
             {
                 bass += "Lucky";
